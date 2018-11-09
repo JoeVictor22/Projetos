@@ -13,6 +13,7 @@ public class Janela {
 		janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		janela.setSize(largura, altura);
 		janela.setResizable(false);
+	
 		
 		//instanciando jogo
 		Canvas jogo = new Canvas(largura,altura);

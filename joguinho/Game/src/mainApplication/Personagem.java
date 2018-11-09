@@ -27,15 +27,15 @@ abstract public class Personagem {
 	private int altura;
 	
 	// Atributos para controle de movimento
-	private short direcao;
-	private short ultimaDirecao;
+	private int direcao;
+	private int ultimaDirecao;
 	private int velocidade;
 
-	// Atributos relacionados a animacoes
+	// Atributos relacionados a animacoes devem ser criados nas classes herdeiras
 	//private BufferedImage[] correndo;
 	//private BufferedImage[] parado;
 	//private BufferedImage[] pulando;
-	private short imagemAtual;
+	//private int imagemAtual;
 	
 	/* Constructor com varios atributos para facilitar o reuso desse trecho
 	 * 
@@ -46,15 +46,18 @@ abstract public class Personagem {
 		this.posY = posY;
 		this.altura = altura;
 		this.largura = largura;
+		this.velocidade = velocidade;
+		this.direcao = 0;
 		
 		/*
 		 * Instanciacao das animacoes
 		 */
-		this.criarAnimacoes();
+		criarAnimacoes();
 		
 	}
 	
 	
+	//metodos abstratos	
 	// Atualizar movimentos e variaveis de controle
 	abstract public void atualizar();
 	
@@ -75,8 +78,8 @@ abstract public class Personagem {
 	 * o indice da animacao nesse metodo eh fixo
 	 * ver documentacao do metodo drawImage herdado de java.awt.Graphics e java.awt.Graphics2D
 	 */
-	public void pinta(Graphics2D g, BufferedImage[] animacao) {
-		if(ultimaDirecao == -1){      
+	public void pintar(Graphics2D g, BufferedImage[] animacao, int imagemAtual) {
+		if(ultimaDirecao == 1){      
 	        g.drawImage(
 	             animacao[imagemAtual],
 	             posX,posY,
@@ -84,8 +87,7 @@ abstract public class Personagem {
 	             0, 0,
 	             animacao[imagemAtual].getWidth(), animacao[imagemAtual].getHeight(),
 	             null);
-	    }else if(ultimaDirecao == 1){
-	            //par
+	    }else if(ultimaDirecao == -1){
 	            g.drawImage(
 	            	animacao[imagemAtual],
 	                posX,posY,
@@ -97,26 +99,50 @@ abstract public class Personagem {
 	}
 	
 	
+	
 	/* metodo para carregar imagens em um vetor
-	 * enviar endereco, e quantidade de imagens-1
-	 * o endereco das imagens devem ser iguais e enumerados no final de 0 ao size
+	 * enviar endereco, e quantidade de imagens e o tipo de extensao sem o ponto (.)
+	 * o endereco das imagens devem ser iguais e enumerados no final de 1 ao size
 	 * 
 	 */
-	public BufferedImage[] carregarImagens(String endereco, int size) {
+	public BufferedImage[] carregarImagens(String endereco, int size,  String extensao) {
 		BufferedImage[] imagem = new BufferedImage[size];
 		
-		for(int i = 0; i <= size; i++) {	
+		for(int i = 1; i <= size; i++) {	
 			try {
-				imagem[i] = ImageIO.read(new File(endereco + i + "png"));
+				imagem[i-1] = ImageIO.read(new File(endereco + i + "." + extensao));
 			}catch(IOException e) {
-				System.out.println("Metodo carregarImagens : nao carregou imagens "+ endereco);
+				System.out.println("Metodo carregarImagens : nao carregou imagens "+ endereco+i+"." + extensao);
 			}
 			
 		}
 		return imagem;
 		
 	}
-
+	
+	/*
+	 * atualizacao da movimentacao lateral
+	 */
+	public void anda(){
+		if(direcao == 1) {
+			posX += velocidade;
+		}else if(direcao == -1){
+			posX -= velocidade;
+		}
+	}
+	
+	
+	/*
+	 * metodos para alterar posicao caso necessario
+	 */
+	public void somarPosY(int soma){
+		this.posY += soma;
+		
+	}
+	public void somarPosX(int soma) {
+		this.posX += soma;
+		
+	}
 	
 	/*
 	 * Metodos de acesso
@@ -153,19 +179,19 @@ abstract public class Personagem {
 		this.altura = altura;
 	}
 
-	public short getDirecao() {
+	public int getDirecao() {
 		return direcao;
 	}
 
-	public void setDirecao(short direcao) {
+	public void setDirecao(int direcao) {
 		this.direcao = direcao;
 	}
 
-	public short getUltimaDirecao() {
+	public int getUltimaDirecao() {
 		return ultimaDirecao;
 	}
 
-	public void setUltimaDirecao(short ultimaDirecao) {
+	public void setUltimaDirecao(int ultimaDirecao) {
 		this.ultimaDirecao = ultimaDirecao;
 	}
 
@@ -176,14 +202,4 @@ abstract public class Personagem {
 	public void setVelocidade(int velocidade) {
 		this.velocidade = velocidade;
 	}
-
-	public short getImagemAtual() {
-		return imagemAtual;
-	}
-
-	public void setImagemAtual(short imagemAtual) {
-		this.imagemAtual = imagemAtual;
-	}
-	
-	
 }

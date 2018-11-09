@@ -24,6 +24,14 @@ public class Canvas extends JPanel implements Runnable, KeyListener{
 	private int h,w;
 	
 	private BufferedImage[] cenario = new BufferedImage[3];
+	private Jogador jogador;
+	
+	/*
+	 * atributos para resolver problemas com entrada do teclado
+	 */
+	private boolean andandoDireita;
+	private boolean andandoEsquerda;
+	private boolean atacando;
 	
 	
 	
@@ -32,6 +40,10 @@ public class Canvas extends JPanel implements Runnable, KeyListener{
 	
 	//constructor
 	public Canvas(int h, int w) {
+		andandoDireita = false;
+		andandoEsquerda = false;
+		atacando = true;
+		jogador = new Jogador(50,500,100,150,6);
 		
 		this.h = h;
 		this.w = w;
@@ -48,9 +60,11 @@ public class Canvas extends JPanel implements Runnable, KeyListener{
 			
 		}
 		
+		
 		Thread gameLoop = new Thread(this);
+		
 		gameLoop.start();
-	
+		
 		
 	}
 	
@@ -65,7 +79,7 @@ public class Canvas extends JPanel implements Runnable, KeyListener{
 	
 	//instrucao para atualizar componentes do jogo
 	public void atualiza() {
-		
+		jogador.atualizar();
 	}
 	//instrucao para gerar delay no thread
 	public void dorme() {
@@ -82,14 +96,22 @@ public class Canvas extends JPanel implements Runnable, KeyListener{
 		
 		Graphics2D g2d = (Graphics2D) g.create();
 		
-		//pinta o background
-		//g2d.setColor(Color.black);
-	    //g2d.fillRect(0,0,h,w);
+		//pinta as imagens de background
 		g2d.drawImage(cenario[1], null, 0,0 );
 		g2d.drawImage(cenario[0], null, 0, 0);
 		g2d.drawImage(cenario[2], null, 0, 0);
 		
+		//pinta o jogador
+		jogador.pintarJogador(g2d);
 		
+		/*
+		 * teste tamanho do salto
+		 * altura do retangulo deve ser a posY menos a altura do salto
+		*/
+		/*
+		g2d.setColor(Color.black);
+	    g2d.fillRect(50,375,100,100);
+	    */
 	}
 	
 	
@@ -100,22 +122,36 @@ public class Canvas extends JPanel implements Runnable, KeyListener{
 		
 		//esquerda
 		if(e.getKeyCode() == KeyEvent.VK_A) {
-		//	jogador.acaoDirecao(-1);
+			if(andandoDireita == true) {
+				jogador.andar(0);
+			}else {
+				jogador.andar(-1);	
+			}
+			andandoEsquerda = true;
+						
 		}
 		
 		//direita
 		if(e.getKeyCode() == KeyEvent.VK_D) {
-			//jogador.acaoDirecao(1);
+			if(andandoEsquerda == true) {
+				jogador.andar(0);
+			}else {
+				jogador.andar(1);
+			}
+			andandoDireita = true;
 		}
 		
 		//saltar
-		if(e.getKeyCode() == KeyEvent.VK_W) {
-			//jogador.saltar(true);
+		if(e.getKeyCode() == KeyEvent.VK_W && !jogador.isPulando()) {
+			jogador.pular();
 		}
 		
-		//atirar
-		if(e.getKeyCode() == KeyEvent.VK_SPACE ) {
-			//jogador.disparar(true);
+		//bater
+		if(e.getKeyCode() == KeyEvent.VK_F ) {
+			if(!atacando) {
+				jogador.atacar();
+				atacando = true;
+			}
 		}
 		
 	}
@@ -123,24 +159,37 @@ public class Canvas extends JPanel implements Runnable, KeyListener{
 	public void keyReleased(KeyEvent e) {
 		
 		if(e.getKeyCode() == KeyEvent.VK_A) {
-			//jogador.acaoDirecao(0);
+			if(andandoDireita == true) {
+				jogador.andar(1);
+				
+			}else {
+				jogador.andar(0);
+			}
+			andandoEsquerda = false;
 		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_D) {
-			//jogador.acaoDirecao(0);
+			if(andandoEsquerda == true) {
+				jogador.andar(-1);
+			}else {
+				jogador.andar(0);
+			}
+			andandoDireita = false;
 		}
 		
-		if(e.getKeyCode() == KeyEvent.VK_W) {
-			//jogador.realizarAcao('a');
+		if(e.getKeyCode() == KeyEvent.VK_F) {
+			atacando = false;
 		}
-		
 	}
 	
 	public void keyTyped(KeyEvent e) {
 		
 	}
 	
-	//estudar essa bagaca
+	/*
+	 * estudar esse lixo
+	 * Metodo para redimensionar uma bufferedImage
+	 */
 	public static BufferedImage resize(BufferedImage img, int W, int H) { 
 		
 	    Image temp = img.getScaledInstance(W, H, Image.SCALE_SMOOTH);
