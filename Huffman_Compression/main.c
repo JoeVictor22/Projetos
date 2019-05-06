@@ -15,7 +15,7 @@ typedef struct pHeap{
 //-------------------BST-------------------//
 pHeap *busca(pHeap *no, char *caractere);
 pHeap *novo_pHeap(char caractere, int frequencia);
-pHeap *inserir(pHeap *no, char caractere, int frequencia); 
+pHeap *inserir(pHeap *no, char caractere, int frequencia);
 void em_ordem(pHeap *no);
 void pre_ordem(pHeap *no);
 void pos_ordem(pHeap *no);
@@ -45,16 +45,17 @@ int main(){
 	printf("\n");
 	pos_ordem(arvore_frequencia);
 	printf("\n");
-		
-		 	
-	pHeap * temp = gera_monte(arvore_frequencia);
-	printf("arvore inicial\n");
-	pos_ordem(arvore_frequencia);
-	printf("\n");	
-	printf("arvore final\n");
-	pos_ordem(temp);
-	printf("\n");
 
+
+	pHeap * temp = gera_monte(arvore_frequencia);
+	/*
+	printf("arvore inicial\n");
+	em_ordem(arvore_frequencia);
+	printf("\n");
+	printf("arvore final\n");
+	em_ordem(temp);
+	printf("\n");
+    */
 	return 0;
 }
 
@@ -67,30 +68,31 @@ pHeap *busca(pHeap *no, char *caractere){
 	}else if(no->caractere > *caractere){
 		return busca(no->esquerda, caractere);
 	}else if(no->caractere < *caractere){
-		return busca(no->direita, caractere);	
-	}	
+		return busca(no->direita, caractere);
+	}
 }
 
 pHeap *novo_pHeap(char caractere, int frequencia){
 	pHeap *no;
 	no = (pHeap*)malloc(sizeof(pHeap));
-	no->esquerda = no->direita = NULL;
+	no->esquerda = NULL;
+	no->direita = NULL;
 	no->caractere = caractere;
 	no->frequencia = frequencia;
 	return no;
 }
 
-pHeap *inserir(pHeap *no, char caractere, int frequencia) { 
+pHeap *inserir(pHeap *no, char caractere, int frequencia) {
 
     if (no == NULL)
-		return novo_pHeap(caractere, frequencia);   
-    if (frequencia < no->frequencia) 
-        no->esquerda = inserir(no->esquerda, caractere, frequencia); 
-    else if (frequencia > no->frequencia) 
-        no->direita = inserir(no->direita, caractere, frequencia);    
-  
-    return no; 
-} 	
+		return novo_pHeap(caractere, frequencia);
+    if (frequencia < no->frequencia)
+        no->esquerda = inserir(no->esquerda, caractere, frequencia);
+    else if (frequencia > no->frequencia)
+        no->direita = inserir(no->direita, caractere, frequencia);
+
+    return no;
+}
 
 void em_ordem(pHeap *no){
 
@@ -133,56 +135,69 @@ que ele é um nó interno
 
 
 pHeap *gera_monte(pHeap *raiz){
-	
+
 	pHeap *no = raiz;
 
 	/*INI
 	- cria um vetor auxiliar para ser realizado as alteracoes na arvore
 	*/
 	pHeap *vetor[HEAP_MAX];
+	pHeap *fix;
 	int i;
 	for(i = 0; i < HEAP_MAX; i++){
+        fix = no->direita;
+        no->direita = NULL;
 		vetor[i] = no;
-		no = no->direita;
+		no = fix;
+
 	}
 
 	//print
 	printf("\nvetor incial: ");
 	for(i = 0; i <  HEAP_MAX; i++){
 		printf(" %d - %c,", vetor[i]->frequencia, vetor[i]->caractere);
-	}	
+	}
 
 	printf("\n\n\n");
-			
+
 	/*insert
 	- soma os nos ate que o vetor so contenha 1 unico no
 	*/
-	
-	
+
+
 	int j = HEAP_MAX-1;
-	i = 0;
-	while(i < j){
-		vetor[i+1] = insere_no(vetor[i], vetor[i+1]);
-		i++;			
-		sort(vetor, j, i);
-		
+	for(i = 0; i < j; i++){
+        vetor[i+1] = insere_no(vetor[i], vetor[i+1]);
+
+		sort(vetor, j, i+1);
 
 		printf("I : %d J : %d\n", i, j);
 		//getchar();
-	
+
 	}
 
-	return vetor[j];	
+	/*
+	printf("\neoq pvt, funciona ai meu : %d\n\n", vetor[j]->frequencia);
+    printf("%d - %d\n", vetor[j]->esquerda->frequencia, vetor[j]->direita->frequencia);
+    printf("%d ", vetor[j]->direita->esquerda->frequencia);
+    printf("%d ", vetor[j]->direita->esquerda->esquerda->frequencia);
+    printf("%d ", vetor[j]->direita->esquerda->direita->frequencia);
+    printf("%d ", vetor[j]->direita->esquerda->direita->direita->frequencia);
+    **/
+
+    em_ordem(vetor[j]);
+
+	return vetor[j];
 }
 
 pHeap *insere_no(pHeap *no1, pHeap *no2){
-	pHeap *no;	
+	pHeap *no;
 	no = (pHeap*)malloc(sizeof(pHeap));
 
 	no->esquerda = no1;
 	no->direita = no2;
-	no->frequencia = no1->frequencia + no2->frequencia;	
-	no->caractere = 'N';	
+	no->frequencia = no1->frequencia + no2->frequencia;
+	no->caractere = 'N';
 	printf("no interno criado : %d - %c, a partir de : |%d - %c| e |%d - %c|\n",no->frequencia, no->caractere, no1->frequencia, no1->caractere, no2->frequencia, no2->caractere);
 
 	return no;
@@ -196,9 +211,9 @@ void sort(pHeap *vetor[], int j, int i){
 	printf("\nvalor a ser ordenado : %d\n", temp->frequencia);
 	int l;
 	printf("vetor : nao ordenado");
-	for(l = 0; l <=  j; l++){
+	for(l = i; l <=  j; l++){
 		printf(" %d - %c,", vetor[l]->frequencia, vetor[l]->caractere);
-	}		
+	}
 	printf("\n");
 
 	int aux = temp->frequencia;
@@ -207,15 +222,15 @@ void sort(pHeap *vetor[], int j, int i){
 		i++;
 	}
 	vetor[i] = temp;
-	
+
 	printf("valor a ser substittuido %d = %d\n", vetor[i]->frequencia, temp->frequencia);
-	
+
 
 
 	printf("vetor ordenado: ");
-	for(i = 0; i <=  j; i++){
-		printf(" %d - %c,", vetor[i]->frequencia, vetor[i]->caractere);
-	}		
+	for(l = i-2; l <=  j; l++){
+		printf(" %d - %c,", vetor[l]->frequencia, vetor[l]->caractere);
+	}
 	printf("\n\n");
 
 
