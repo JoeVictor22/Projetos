@@ -24,7 +24,7 @@ void pos_ordem(pHeap *no);
 //------------FREQUENCE_HUFFMAN-----------//
 pHeap *gera_monte(pHeap *no);
 pHeap *insere_no(pHeap *no1, pHeap *no2);
-void sort(pHeap *vetor[], int j);
+void sort(pHeap *vetor[], int j, int i);
 //------------FREQUENCE_HUFFMAN_FIM-------//
 
 
@@ -45,8 +45,15 @@ int main(){
 	printf("\n");
 	pos_ordem(arvore_frequencia);
 	printf("\n");
+		
 		 	
-	arvore_frequencia = gera_monte(arvore_frequencia);
+	pHeap * temp = gera_monte(arvore_frequencia);
+	printf("arvore inicial\n");
+	pos_ordem(arvore_frequencia);
+	printf("\n");	
+	printf("arvore final\n");
+	pos_ordem(temp);
+	printf("\n");
 
 	return 0;
 }
@@ -94,6 +101,7 @@ void em_ordem(pHeap *no){
 	}
 }
 
+
 void pre_ordem(pHeap *no){
 
 	if(no != NULL){
@@ -139,48 +147,38 @@ pHeap *gera_monte(pHeap *raiz){
 	}
 
 	//print
-	printf("\nvetor : ");
+	printf("\nvetor incial: ");
 	for(i = 0; i <  HEAP_MAX; i++){
 		printf(" %d - %c,", vetor[i]->frequencia, vetor[i]->caractere);
 	}	
 
-	printf("\n");
+	printf("\n\n\n");
 			
 	/*insert
 	- soma os nos ate que o vetor so contenha 1 unico no
 	*/
 	
-	int l;
-
-	pHeap *temp;	
+	
 	int j = HEAP_MAX-1;
 	i = 0;
 	while(i < j){
-		temp = insere_no(vetor[i], vetor[i+1]);
-		i++;		
-		vetor[i] = temp;		
-		sort(vetor, j);
+		vetor[i+1] = insere_no(vetor[i], vetor[i+1]);
+		i++;			
+		sort(vetor, j, i);
 		
 
 		printf("I : %d J : %d\n", i, j);
 		//getchar();
-		printf("vetor : ");
-		for(l = 0; l <  j; l++){
-			printf(" %d - %c,", vetor[l]->frequencia, vetor[l]->caractere);
-		}		
-		printf("\n\n");
-
+	
 	}
 
-	em_ordem(vetor[0]);
-	printf("\n");
-
-	return no;	
+	return vetor[j];	
 }
 
 pHeap *insere_no(pHeap *no1, pHeap *no2){
 	pHeap *no;	
 	no = (pHeap*)malloc(sizeof(pHeap));
+
 	no->esquerda = no1;
 	no->direita = no2;
 	no->frequencia = no1->frequencia + no2->frequencia;	
@@ -190,15 +188,39 @@ pHeap *insere_no(pHeap *no1, pHeap *no2){
 	return no;
 }
 
-void sort(pHeap *vetor[], int j){
+
+//nao precisa passar j se tamanho for definido em HEAP_MAX
+void sort(pHeap *vetor[], int j, int i){
 	//int aux = temp->frequencia;
-	int aux = vetor[1]->frequencia;
-	int i = 1;
-	while(i < j && vetor[i+1]->frequencia <= aux){
+	pHeap *temp = vetor[i];
+	printf("\nvalor a ser ordenado : %d\n", temp->frequencia);
+	int l;
+	printf("vetor : nao ordenado");
+	for(l = 0; l <=  j; l++){
+		printf(" %d - %c,", vetor[l]->frequencia, vetor[l]->caractere);
+	}		
+	printf("\n");
+
+	int aux = temp->frequencia;
+	while(i < j && aux >= vetor[i+1]->frequencia){
 		vetor[i] = vetor[i+1];
 		i++;
 	}
-	vetor[i] = vetor[1];
+	vetor[i] = temp;
+	
+	printf("valor a ser substittuido %d = %d\n", vetor[i]->frequencia, temp->frequencia);
+	
+
+
+	printf("vetor ordenado: ");
+	for(i = 0; i <=  j; i++){
+		printf(" %d - %c,", vetor[i]->frequencia, vetor[i]->caractere);
+	}		
+	printf("\n\n");
+
+
 }
+
+
 //------------PRIORIDADE_HUFFMAN_FIM--------//
 
