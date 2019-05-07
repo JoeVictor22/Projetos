@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define HEAP_MAX 6
 
@@ -27,7 +28,9 @@ pHeap *insere_no(pHeap *no1, pHeap *no2);
 void sort(pHeap *vetor[], int j, int i);
 //------------FREQUENCE_HUFFMAN_FIM-------//
 
-
+//------------CONVERSAO_HUFFMAN----------//
+char converter(pHeap *no, char *binario, int *i);
+//--------CONVERSAO_HUFFMAN_FIM----------//
 
 int main(){
 
@@ -48,14 +51,23 @@ int main(){
 
 
 	pHeap * temp = gera_monte(arvore_frequencia);
-	/*
-	printf("arvore inicial\n");
-	em_ordem(arvore_frequencia);
-	printf("\n");
-	printf("arvore final\n");
+
 	em_ordem(temp);
-	printf("\n");
-    */
+
+
+	char palavra[18] = "110011011001011110";
+	printf("\n\nconversao\n");
+	printf("string : %s", palavra);
+	printf("\nSaida\n");
+	i = 0;
+	char letra;	
+	// i < strlen
+	while(i < 18){
+		letra = converter(temp,palavra,&i);
+		printf("%c ", letra);
+		
+	}
+
 	return 0;
 }
 
@@ -127,9 +139,8 @@ void pos_ordem(pHeap *no){
 
 /*
 - A arvore a ser utilizada deve estar em ordem crescente de frequencias
-- Cada nó criado, sendo ele a soma de duas folhas, deve possuir charater = NULL, indicando
-que ele é um nó interno
-
+- Cada n? criado, sendo ele a soma de duas folhas, deve possuir charater = NULL, indicando
+que ele ? um n? interno
 */
 //------------PRIORIDADE_HUFFMAN------------//
 
@@ -152,6 +163,7 @@ pHeap *gera_monte(pHeap *raiz){
 
 	}
 
+	/*
 	//print
 	printf("\nvetor incial: ");
 	for(i = 0; i <  HEAP_MAX; i++){
@@ -159,11 +171,11 @@ pHeap *gera_monte(pHeap *raiz){
 	}
 
 	printf("\n\n\n");
+	*/
 
 	/*insert
 	- soma os nos ate que o vetor so contenha 1 unico no
 	*/
-
 
 	int j = HEAP_MAX-1;
 	for(i = 0; i < j; i++){
@@ -171,22 +183,11 @@ pHeap *gera_monte(pHeap *raiz){
 
 		sort(vetor, j, i+1);
 
-		printf("I : %d J : %d\n", i, j);
+		//printf("I : %d J : %d\n", i, j);
 		//getchar();
 
 	}
-
-	/*
-	printf("\neoq pvt, funciona ai meu : %d\n\n", vetor[j]->frequencia);
-    printf("%d - %d\n", vetor[j]->esquerda->frequencia, vetor[j]->direita->frequencia);
-    printf("%d ", vetor[j]->direita->esquerda->frequencia);
-    printf("%d ", vetor[j]->direita->esquerda->esquerda->frequencia);
-    printf("%d ", vetor[j]->direita->esquerda->direita->frequencia);
-    printf("%d ", vetor[j]->direita->esquerda->direita->direita->frequencia);
-    **/
-
     em_ordem(vetor[j]);
-
 	return vetor[j];
 }
 
@@ -197,8 +198,8 @@ pHeap *insere_no(pHeap *no1, pHeap *no2){
 	no->esquerda = no1;
 	no->direita = no2;
 	no->frequencia = no1->frequencia + no2->frequencia;
-	no->caractere = 'N';
-	printf("no interno criado : %d - %c, a partir de : |%d - %c| e |%d - %c|\n",no->frequencia, no->caractere, no1->frequencia, no1->caractere, no2->frequencia, no2->caractere);
+	no->caractere = NULL;
+	//printf("no interno criado : %d - %c, a partir de : |%d - %c| e |%d - %c|\n",no->frequencia, no->caractere, no1->frequencia, no1->caractere, no2->frequencia, no2->caractere);
 
 	return no;
 }
@@ -208,6 +209,7 @@ pHeap *insere_no(pHeap *no1, pHeap *no2){
 void sort(pHeap *vetor[], int j, int i){
 	//int aux = temp->frequencia;
 	pHeap *temp = vetor[i];
+	/*
 	printf("\nvalor a ser ordenado : %d\n", temp->frequencia);
 	int l;
 	printf("vetor : nao ordenado");
@@ -215,6 +217,7 @@ void sort(pHeap *vetor[], int j, int i){
 		printf(" %d - %c,", vetor[l]->frequencia, vetor[l]->caractere);
 	}
 	printf("\n");
+	*/
 
 	int aux = temp->frequencia;
 	while(i < j && aux >= vetor[i+1]->frequencia){
@@ -223,9 +226,9 @@ void sort(pHeap *vetor[], int j, int i){
 	}
 	vetor[i] = temp;
 
-	printf("valor a ser substittuido %d = %d\n", vetor[i]->frequencia, temp->frequencia);
+	//printf("valor a ser substittuido %d = %d\n", vetor[i]->frequencia, temp->frequencia);
 
-
+	/*
 
 	printf("vetor ordenado: ");
 	for(l = i-2; l <=  j; l++){
@@ -233,9 +236,29 @@ void sort(pHeap *vetor[], int j, int i){
 	}
 	printf("\n\n");
 
+	*/
 
 }
 
 
 //------------PRIORIDADE_HUFFMAN_FIM--------//
 
+//-------------CONVERSAO_HUFFMAN-----------//
+
+char converter(pHeap *no, char *binario, int *i){
+	if(no->caractere == NULL ){
+		if(binario[*i] == '0'){
+			*i = *i+1;
+			converter(no->esquerda, binario, i);
+		}else{
+			*i = *i+1;
+			converter(no->direita, binario, i);
+		}
+	}else{
+		//printf("no acessado %d - %c\n", no->frequencia, no->caractere);
+		return no->caractere;
+	}
+
+}
+
+//-----------CONVERSAO_HUFFMAN_FIM-----------//
