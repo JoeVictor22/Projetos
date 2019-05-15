@@ -15,6 +15,11 @@ typedef struct pHeap{
 	struct pHeap *direita;
 }pHeap;
 
+typedef struct dicionario{
+	char *binario;
+}Dict;
+
+Dict tabela[CHARSET_SIZE+10];
 
 //-------------------BST-------------------//
 pHeap *novo_pHeap(int caractere, int frequencia);
@@ -28,6 +33,7 @@ void pos_ordem(pHeap *no);
 //---------------SALVAR_CAMINHO------------//
 void salvar_caminho(pHeap *no);
 void percorre(pHeap *no);
+void printar_tabela(pHeap *no);
 //---------------SALVAR_CAMINHO------------//
 
 
@@ -68,10 +74,27 @@ void em_ordem(pHeap *no){
 }
 
 //----------------BST_FIM-------------------//
+
+void printar_tabela(pHeap *no){
+	int i;
+	printf("comecou");
+	for(i = 0; i < CHARSET_SIZE; i++){
+		if(tabela[i].binario != NULL){
+			printf("%c - %s\n", i, tabela[i]);
+		}
+	}
+
+	printf("print tabela FIM\n\n");
+
+}
 void salvar_caminho(pHeap *no){
-//	Dict letra;
-//	letra.binario = no->caminho;
-//	tabela[no->caractere] = letra;
+
+	tabela[no->caractere].binario = (char*)malloc((strlen(no->caminho) + 1)*sizeof(char));
+
+	strcpy(tabela[no->caractere].binario, no->caminho);
+	
+	printf("string : %s ------- ", tabela[no->caractere].binario);
+
 	printf("salvou caminho : %s pra letra %c int = %d\n", no->caminho, no->caractere, no->caractere);
 
 }
