@@ -31,6 +31,7 @@ void sort(pHeap *vetor[], int n, int i);
 void criar_binario(FILE *fptr);
 //char * reverse( char * s );
 char *decimal_to_binary(int n);
+void salvar(FILE *fptr, char *binario);
 
 
 
@@ -245,8 +246,17 @@ void criar_vetor_frequencia(FILE *fptr){
 void criar_binario(FILE *fptr){
 	fseek(fptr, 0,SEEK_SET);
 	
+	FILE *fptrDestino;
+	fptrDestino = fopen("binario.huff", "wb+");
+	if (fptrDestino == NULL){
+       printf("Error! opening file");
+       exit(1);
+	}
+   
+	
 	int ch;
 	int j = 0;
+	int count;
 	char binario[50];
 	binario[0] = '\0';
 	char aux[50];
@@ -258,8 +268,24 @@ void criar_binario(FILE *fptr){
 		
 		if(ch == EOF){
 			
+			
+			//se aux > 8 talvez tenha erro
+			if(strlen(aux) > 0){
+				count = 1;			
+				strcpy(binario, aux);
+				while(strlen(binario) < 8){
+					binario[strlen(binario)] = '0';	
+					count++;
+				}
+				binario[strlen(binario)] = '\0';
+			}
+			salvar(fptrDestino, binario);
+			salvar(fptrDestino, decimal_to_binary(count));
+			
 			printf("\nULTIMA STRING :bin =%s, aux =%s\n", binario, aux);
+			printf("ULTIMA STRING A SER INSERIDA : %s\n", decimal_to_binary(count));
 			printf("fim do arquivo FIM\n\n");
+			fechar_arquivo(fptrDestino);
 			break;
 		}
 		
@@ -304,6 +330,7 @@ void criar_binario(FILE *fptr){
 		//talvez colocar esse if dentro do if anterior j > 0
 		if(strlen(binario) == 8){
 			printf("%s\n", binario);
+			salvar(fptrDestino, binario);
 			
 		//	printf("salvar string : %s\n", binario);
 			binario[0] = '\0';
@@ -313,6 +340,13 @@ void criar_binario(FILE *fptr){
 			
 	}
  
+}
+
+void salvar(FILE *fptr, char *binario){
+	unsigned char temp = strtol(binario,0,2);
+	printf("salvou %d\n", temp);
+	fwrite(&temp, sizeof(unsigned char), 1, fptr);
+
 }
 
 
