@@ -25,6 +25,15 @@ pHeap *insere_no(pHeap *no1, pHeap *no2);
 void sort(pHeap *vetor[], int n, int i);
 //------------FREQUENCE_HUFFMAN_FIM-------//
 
+
+//-------------salvar arquivo
+
+void criar_binario(FILE *fptr);
+//char * reverse( char * s );
+char *decimal_to_binary(int n);
+
+
+
 int main(){
 
 	int i;
@@ -36,13 +45,18 @@ int main(){
 	aux = aux->direita;
 	aux = aux->direita;
 
-	printf("\nESPACO 111\n%d - %c\n", aux->frequencia, aux->caractere);
+	//printf("\nESPACO 111\n%d - %c\n", aux->frequencia, aux->caractere);
 	system("pause");
 
 	percorre(arvore_frequencia);
 
-	printar_tabela(arvore_frequencia);
-	
+	//printar_tabela(arvore_frequencia);
+	FILE *fptr = abrir_arquivo();
+
+	system("color 0a");
+	criar_binario(fptr);
+
+	fechar_arquivo(fptr);	
 	return 0;
 }
 
@@ -226,3 +240,106 @@ void criar_vetor_frequencia(FILE *fptr){
 	 }
  	printf("criar_vetor_frequencia FIM\n\n");
 }
+
+
+void criar_binario(FILE *fptr){
+	fseek(fptr, 0,SEEK_SET);
+	
+	int ch;
+	int j = 0;
+	char binario[50];
+	binario[0] = '\0';
+	char aux[50];
+	aux[0] = '\0';
+	//calcular frequencia
+	while(1){
+		ch = fgetc(fptr);
+		
+		
+		if(ch == EOF){
+			
+			printf("\nULTIMA STRING :bin =%s, aux =%s\n", binario, aux);
+			printf("fim do arquivo FIM\n\n");
+			break;
+		}
+		
+		TESTE:
+		
+		if(strlen(binario) < 8){
+			if(j == 0){
+				strcat(binario, tabela[ch].binario);
+ 				//binario = getBinario(ch);//strcat	
+ 				//break;		
+			}else{
+				strcpy(binario, aux);
+				//bin = aux; //strcpy
+				aux[0] = '\0';
+				j = 0;
+				//reduzir fptr 1 char
+			//	fseek(fptr, -1,SEEK_CUR);
+				goto TESTE;
+				//break;
+			}	
+		}
+		while(strlen(binario) > 8){
+			aux[j] = binario[strlen(binario) - 1];
+			binario[strlen(binario) - 1] = '\0';
+			j++;
+		}
+		if(j > 0){
+			aux[j] = '\0';
+			//aux = reverse(&aux);
+			
+			//reverse string
+			int length = strlen(aux);
+		    int c, i, k;
+		    for (i = 0, k = length - 1; i < k; i++, k--){
+		        c = aux[i];
+		        aux[i] = aux[k];
+		        aux[k] = c;
+		    }
+			
+		}
+		
+		//talvez colocar esse if dentro do if anterior j > 0
+		if(strlen(binario) == 8){
+			printf("%s\n", binario);
+			
+		//	printf("salvar string : %s\n", binario);
+			binario[0] = '\0';
+			//armazenar(binario); //salvar no arquivo?	
+		}
+
+			
+	}
+ 
+}
+
+
+char *decimal_to_binary(int n)
+{
+   int c, d, count;
+   char *pointer;
+   
+   count = 0;
+   pointer = (char*)malloc(8+1);
+   
+   if (pointer == NULL)
+      printf("error");
+     
+   for (c = 7 ; c >= 0 ; c--)
+   {
+      d = n >> c;
+     
+      if (d & 1)
+         *(pointer+count) = 1 + '0';
+      else
+         *(pointer+count) = 0 + '0';
+     
+      count++;
+   }
+   *(pointer+count) = '\0';
+   
+   return  pointer;
+}
+
