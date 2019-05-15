@@ -6,6 +6,7 @@
 
 
 int frequencia[CHARSET_SIZE+10];
+//Dict tabela[CHARSET_SIZE+10]; 
 
 void criar_vetor_frequencia(FILE *fptr);
 
@@ -40,6 +41,8 @@ int main(){
 
 	percorre(arvore_frequencia);
 
+	printar_tabela(arvore_frequencia);
+	
 	return 0;
 }
 
