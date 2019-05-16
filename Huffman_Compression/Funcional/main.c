@@ -15,7 +15,6 @@ void fechar_arquivo(FILE *fptr);
 
 /*
 - quando referenciar CHARSET_SIZE usar menor ou igual
-
 */
 pHeap *gera_arvore_de_frequencia(pHeap *arvore_frequencia);
 
@@ -62,7 +61,7 @@ int main(){
 
 	fptr = fopen("binario.huff", "r");
 	
-   if (fptr == NULL){
+    if(fptr == NULL){
        printf("Error! opening file");
        exit(1);
 	}
@@ -341,7 +340,7 @@ void criar_binario(FILE *fptr){
 		
 		//talvez colocar esse if dentro do if anterior j > 0
 		if(strlen(binario) == 8){
-			printf("%s\n", binario);
+			//printf("%s\n", binario);
 			salvar(fptrDestino, binario);
 			
 		//	printf("salvar string : %s\n", binario);
@@ -355,8 +354,9 @@ void criar_binario(FILE *fptr){
 }
 
 void salvar(FILE *fptr, char *binario){
+	
 	unsigned char temp = strtol(binario,0,2);
-	printf("salvou %d\n", temp);
+	//printf("salvou %d\n", temp);
 	fwrite(&temp, sizeof(unsigned char), 1, fptr);
 
 }
@@ -392,9 +392,14 @@ char *decimal_to_binary(int n)
 void ler(FILE *fptr, pHeap *no){
 	
 	short int ch;
+
+	FILE *fptrNovo;
+	fptrNovo = fopen("descompactado.txt", "w");
+
 	
 	char *binario;
-	
+	binario = (char*)malloc(sizeof(char));	
+
 	pHeap *aux;
 	aux = (pHeap*)malloc(sizeof(pHeap));
 	aux = no;
@@ -424,6 +429,8 @@ void ler(FILE *fptr, pHeap *no){
 			if(aux->caractere != -1 ){
 				//printf(" achou : %c\n", aux->caractere);
 				printf("%c", aux->caractere);
+				//salvarDescompactado(fptrNovo, aux->caractere);
+				putc(aux->caractere, fptrNovo);				
 				aux = no;
 				//break;
 			}else{
@@ -441,6 +448,12 @@ void ler(FILE *fptr, pHeap *no){
 		}
 		
 	}
+	fechar_arquivo(fptrNovo);
 	
 }
 
+//void salvarDescompactado(FILE *fptr, int ch){
+
+	//putc(ch, fptr);
+
+//}
