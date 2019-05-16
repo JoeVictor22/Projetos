@@ -32,6 +32,7 @@ void criar_binario(FILE *fptr);
 //char * reverse( char * s );
 char *decimal_to_binary(int n);
 void salvar(FILE *fptr, char *binario);
+void ler(FILE *fptr, pHeap *no);
 
 
 
@@ -54,10 +55,21 @@ int main(){
 	//printar_tabela(arvore_frequencia);
 	FILE *fptr = abrir_arquivo();
 
-	system("color 0a");
+
 	criar_binario(fptr);
 
 	fechar_arquivo(fptr);	
+
+	fptr = fopen("binario.huff", "r");
+	
+   if (fptr == NULL){
+       printf("Error! opening file");
+       exit(1);
+	}
+   
+	ler(fptr, arvore_frequencia);
+	fechar_arquivo(fptr);
+
 	return 0;
 }
 
@@ -256,7 +268,7 @@ void criar_binario(FILE *fptr){
 	
 	int ch;
 	int j = 0;
-	int count;
+	int count = 0;
 	char binario[50];
 	binario[0] = '\0';
 	char aux[50];
@@ -278,8 +290,8 @@ void criar_binario(FILE *fptr){
 					count++;
 				}
 				binario[strlen(binario)] = '\0';
+				salvar(fptrDestino, binario);
 			}
-			salvar(fptrDestino, binario);
 			salvar(fptrDestino, decimal_to_binary(count));
 			
 			printf("\nULTIMA STRING :bin =%s, aux =%s\n", binario, aux);
@@ -375,5 +387,60 @@ char *decimal_to_binary(int n)
    *(pointer+count) = '\0';
    
    return  pointer;
+}
+
+void ler(FILE *fptr, pHeap *no){
+	
+	short int ch;
+	
+	char *binario;
+	
+	pHeap *aux;
+	aux = (pHeap*)malloc(sizeof(pHeap));
+	aux = no;
+	int i;
+	
+	while(1){
+		
+		ch = fgetc(fptr);
+	
+		if(ch == EOF){
+			
+			system("pause");
+			break;
+		}
+		//printf("%c", ch);
+		
+		//converter(ch, no);
+		
+		
+	//	printf("leu %d", ch);
+		binario = decimal_to_binary(ch);
+	//	printf("%s", binario);
+		i = 0;
+		//aux = no;
+		while(i < 8){
+			
+			if(aux->caractere != -1 ){
+				//printf(" achou : %c\n", aux->caractere);
+				printf("%c", aux->caractere);
+				aux = no;
+				//break;
+			}else{
+				if(binario[i] == '1'){
+					//printf("1");
+					aux = aux->direita;
+				}else{
+					//printf("0");
+					aux = aux->esquerda;
+				}
+				i++;
+			}
+			
+			
+		}
+		
+	}
+	
 }
 
