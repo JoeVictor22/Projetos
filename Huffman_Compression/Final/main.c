@@ -47,7 +47,7 @@ int main(){
 	aux = aux->direita;
 
 	//printf("\nESPACO 111\n%d - %c\n", aux->frequencia, aux->caractere);
-	system("pause");
+
 
 	percorre(arvore_frequencia);
 
@@ -69,9 +69,6 @@ int main(){
 	ler(fptr, arvore_frequencia);
 	fechar_arquivo(fptr);
 
-
-	printf("%s, %s, %s\n", tabela[84],tabela[104],tabela[101]);
-	printf("%c, %c, %c\n", 84, 104, 101);
 
 	return 0;
 }
@@ -255,6 +252,7 @@ void criar_binario(FILE *fptr){
 	int ch;
 	int i;
 	int j;
+	int restante = 0;
 	char binario[100];
 	binario[0] = '\0';
 	char aux[100];
@@ -276,9 +274,31 @@ void criar_binario(FILE *fptr){
 			}else{
 				//novo char
 				ch = fgetc(fptr);
-				printf("%c", ch);
+				//printf("%c", ch);
 				if(ch == EOF){
-					printf("fim\n");
+					
+					if(strlen(binario) > 0){
+						printf("Salvou bin antes - %s\n", binario);
+						while(strlen(binario) < 8){
+
+							binario[strlen(binario)+1] = '\0';							
+							binario[strlen(binario)] = '0';
+							restante++; 				
+						}
+						
+		
+						binario[strlen(binario)] = '\0';
+						salvar(fptrDestino, binario);
+						printf("Salvou bin dps- %s\n", binario);
+						salvar(fptrDestino, decimal_to_binary(restante));
+						printf("salvou restante - %s\n", decimal_to_binary(restante));
+	
+					}else{
+						salvar(fptrDestino, decimal_to_binary(0));
+						printf("salvou 0 %s\n", decimal_to_binary(0));
+					}					
+					
+
 					break;
 				}
 				//printf("char %c\n", ch);
@@ -377,7 +397,6 @@ void ler(FILE *fptr, pHeap *no){
 	
 		if(ch == EOF){
 			
-			system("pause");
 			break;
 		}
 		//printf("%c", ch);
