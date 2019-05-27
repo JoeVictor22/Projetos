@@ -376,7 +376,7 @@ char *decimal_to_binary(int n)
 
 void ler(FILE *fptr, pHeap *no){
 	
-	int ch;
+	int ch, ch1, ch2;
 
 	FILE *fptrNovo;
 	fptrNovo = fopen("descompactado.txt", "w");
@@ -388,32 +388,62 @@ void ler(FILE *fptr, pHeap *no){
 	pHeap *aux;
 	aux = (pHeap*)malloc(sizeof(pHeap));
 	aux = no;
-	int i;
+	int i, j;
+	
+
+
+	ch = fgetc(fptr);
+	if(ch == EOF){
+		printf("error");
+		//break;
+	}
+	ch1 = fgetc(fptr);
+	if(ch1 == EOF){
+		printf("error");	
+		//break;				
+	}
 	
 	while(1){
-		
-		ch = fgetc(fptr);
-		
-	
-		if(ch == EOF){
 			
-			break;
-		}
-		//printf("%c", ch);
+		ch2 = fgetc(fptr);
+		if(ch2 == EOF){
+
+			//remover quantidade de chars sobressalente 
+			binario = decimal_to_binary(ch);
+
+			printf("ultimos valres %d %d \n", ch, ch1);
+			printf("ultima string lida %s\n", binario);
+			j = 9 - ch1;			
+			while(ch1 > 0){
+				binario[strlen(binario)-1] = '\0';
+				ch1--;			
+			}
+			printf("string alterada %s\n", binario);
 		
-		//converter(ch, no);
-		
-		
-	//	printf("leu %d", ch);
+			i = 0;
+			while(i < j){
+				if(aux->caractere != -1 ){
+					putc(aux->caractere, fptrNovo);	
+					printf("ultimo char %d - %c\n", aux->caractere);	
+					i++;		
+				}else{
+					if(binario[i] == '1'){
+						aux = aux->direita;
+					}else{
+						aux = aux->esquerda;
+					}
+					i++;
+				}				
+			}		
+
+			break;				
+		}	
+
+	
 		binario = decimal_to_binary(ch);
 		
-		// PRINT MUITO UTIL
-		//printf("%c - %d\n%s\n", ch, ch, binario);	
-
-
-	//	printf("%s", binario);
+	
 		i = 0;
-		//aux = no;
 		while(i < 8){
 			
 			if(aux->caractere != -1 ){
@@ -432,10 +462,10 @@ void ler(FILE *fptr, pHeap *no){
 					aux = aux->esquerda;
 				}
 				i++;
-			}
-			
-			
+			}				
 		}
+		ch = ch1;
+		ch1 = ch2;
 		
 	}
 	fechar_arquivo(fptrNovo);
