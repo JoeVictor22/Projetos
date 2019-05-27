@@ -9,8 +9,8 @@
 
 typedef struct pHeap{
 	int caractere;
-	int frequencia;
-	char *caminho;
+	int frequencia; //valor
+	char *caminho; //string auxiliar
 	struct pHeap *esquerda;
 	struct pHeap *direita;
 }pHeap;
@@ -35,7 +35,7 @@ void salvar_caminho(pHeap *no);
 void percorre(pHeap *no);
 void printar_tabela(pHeap *no);
 //---------------SALVAR_CAMINHO------------//
-
+void libera_no(pHeap *no){
 
 
 //-------------------BST-------------------//
@@ -87,6 +87,7 @@ void printar_tabela(pHeap *no){
 	printf("print tabela FIM\n\n");
 
 }
+
 void salvar_caminho(pHeap *no){
 
 	tabela[no->caractere].binario = (char*)malloc((strlen(no->caminho) + 1)*sizeof(char));
@@ -135,4 +136,18 @@ void percorre(pHeap *no){
 	}
 
 
+}
+
+
+
+
+void libera_no(pHeap *no){
+	if(no->esquerda != NULL){
+		libera_no(no->esquerda);
+	}
+
+	if(no->direita != NULL){
+		libera_no(no->direita);
+	}
+	free(no);
 }
