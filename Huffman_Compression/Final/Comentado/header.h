@@ -36,7 +36,8 @@ Dict tabela[CHARSET_SIZE+10];
 //-------------------BST-------------------//
 pHeap *novo_pHeap(int caractere, int frequencia);
 void em_ordem(pHeap *no);
-void libera_no(pHeap *no);
+void deleta_arvore(pHeap *no);
+pHeap *insere(pHeap *node, int caractere, int frequencia);
 
 //-------------------HUFF-------------------//
 void percorre(pHeap *no);
@@ -63,7 +64,7 @@ pHeap *novo_pHeap(int caractere, int frequencia){
 
 
 /*
-	Inseri nó no nivel mais profundo a direita
+	Insere nó no nivel mais profundo a direita
 */
 pHeap *inserirNaDireita(pHeap *no, int caractere, int frequencia) {
 
@@ -76,6 +77,17 @@ pHeap *inserirNaDireita(pHeap *no, int caractere, int frequencia) {
     return no;
 }
 
+pHeap *insere(pHeap *no, int caractere, int frequencia) {
+    if (no == NULL){
+		 return novo_pHeap(caractere, frequencia); 
+	} 
+    if (frequencia < no->frequencia) 
+        no->esquerda = insere(no->esquerda, caractere, frequencia); 
+    else if (frequencia > no->frequencia) 
+        no->direita = insere(no->direita, caractere, frequencia);    
+  
+    return no; 
+} 
 
 /*
 	print
@@ -139,12 +151,12 @@ void salvar_caminho(pHeap *no){
 /*
 	Da free em tds os nós
 */
-void libera_no(pHeap *no){
+void deleta_arvore(pHeap *no){
 	if(no->esquerda != NULL){
-		libera_no(no->esquerda);
+		deleta_arvore(no->esquerda);
 	}
 	if(no->direita != NULL){
-		libera_no(no->direita);
+		deleta_arvore(no->direita);
 	}
 	free(no);
 }
