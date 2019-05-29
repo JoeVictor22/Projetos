@@ -4,9 +4,14 @@
 #include <stdbool.h>
 #include "header.h"
 
+/*
+	arquivo de entrada = "arquivo.txt"
+	arquivo compactado = "binario.huff"
+	arquivo descompactado = "descompactado.txt"
+*/
+
 
 int frequencia[CHARSET_SIZE+10];
-
 int qnt_caracteres;
 
 //---------------FREQUENCIA---------------//
@@ -28,10 +33,6 @@ void fechar_arquivo(FILE *fptr);
 
 
 /*
-	TODO modular o uso da funcao abrir_arquivo(), usar char[] arquivo
-	TODO criar funcao de inserir nó qualquer
-	TODO criar funcao de buscar
-	TODO criar funcao de deletar meia boca
 */
 
 
@@ -48,11 +49,9 @@ int main(){
 	FILE *fptr = abrir_arquivo();
 	//cria o arquivo binario
 	criar_binario(fptr);
-
 	fechar_arquivo(fptr);	
 
 	fptr = fopen("binario.huff", "r");
-	
     if(fptr == NULL){
        printf("Error! opening file");
        exit(1);
@@ -60,6 +59,8 @@ int main(){
    	//le o arquivo binario e o descompacta
 	descompactar(fptr, arvore_frequencia);
 	fechar_arquivo(fptr);
+
+	deleta_arvore(arvore_frequencia);
 
 	return 0;
 }
@@ -210,7 +211,7 @@ pHeap *insere_no_interno(pHeap *no1, pHeap *no2){
 ///////////////////////////////////////////
 FILE *abrir_arquivo(){
 	FILE *fptr;
-    fptr = fopen("program.txt","r+");
+    fptr = fopen("arquivo.txt","r+");
 
    if (fptr == NULL){
        printf("Error! opening file");
