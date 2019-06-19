@@ -137,7 +137,8 @@ void Kruskal(struct Grafo* grafo) {
 		printf("%d, \t%d, \t%d\n", resultado[i].origem,resultado[i].destino,resultado[i].distancia );		
 	}    	
 	printf("distancia total : %d\n",soma); 
-	 
+	free(parent);
+	free(resultado);
 } 
 
 
@@ -160,7 +161,6 @@ int main(){
 
 	Kruskal(grafo); 
 	free(grafo);
-	free(grafo->aresta);
 
 	return 0; 
 } 
