@@ -160,7 +160,7 @@ int main(){
 
 	Kruskal(grafo); 
 	free(grafo);
-	free(aresta);
+	free(grafo->aresta);
 
 	return 0; 
 } 
