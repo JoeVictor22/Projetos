@@ -2,11 +2,9 @@
 Algoritmo de Kruskal com Union-find simples
 */
 
-
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <string.h> 
-
 
 /*casos de teste
 4 5
@@ -31,6 +29,17 @@ Algoritmo de Kruskal com Union-find simples
 5 7 15 
 6 7 5
  = 48
+
+5 8 
+1 2 50 
+1 3 30 
+1 4 100 
+1 5 10 
+3 2 5 
+3 4 50 
+4 2 20 
+5 4 10
+ = 45
 
 3 3
 0 1 2 
