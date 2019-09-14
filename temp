@@ -1,0 +1,62 @@
+
+class DynamicButton extends Component{
+	
+	
+	constructor(props){
+		super(props);
+
+		this.state = {
+			i : 0
+		};
+	}
+	
+	teste(name){
+		this.setState({
+			i : this.state.i + 1
+		})
+
+		this.setState({
+			valor1:	<InputInGroup type="number" name={"valor1"} errors={ this.props.errors }  onChange={ this.props.onChange }
+			label='page.contrato_empresa.fields.taxa_estudante' required="required" colsize="6" />
+		})
+		this.setState({
+			tipo1:  <SelectField empty={true} name={"tipo1"} value_name="id" disabled={false} errors={this.props.errors}
+			onChange={this.props.onChange}
+			label='page.contrato_empresa.fields.tipo_estudante' required="required" colsize="4" url="tipo-estudante/all"/>
+		})
+	}
+
+    addSize(){
+
+    }
+
+    decreaseSize(){
+     
+    }
+
+
+	
+	render()
+	{
+		
+		
+		let tipos_estudante = [];
+		if(this.state.i <= 1){
+			tipos_estudante.push(this.state.valor1)
+			tipos_estudante.push(this.state.tipo1)
+		}
+		
+	
+	
+		return(
+			<div>   
+				
+				<h5>{this.props.details}<br></br></h5>   
+				<button type="button" onClick={this.teste.bind(this)}>+</button> 
+				<button type="button" onClick={this.teste.bind(this)}>-</button>
+				{tipos_estudante}
+			</div>
+		);
+	}
+
+}
